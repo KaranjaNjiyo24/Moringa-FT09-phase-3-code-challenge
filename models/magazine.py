@@ -113,7 +113,7 @@ class Magazine:
         return articles
     
     def contributors(self):
-        
+
         from models.author import Author
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -134,6 +134,40 @@ class Magazine:
         
         conn.close()
         return contributors
+    
+    def article_titles(self):
+        conn = get_db_connection    
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT title FROM articles WHERE magazine_id = ?', (self._id))
+        titles = [row['title'] for row in cursor.fetchall()]
+
+        cursor.close()
+        return titles if titles else None
+    
+    def contributing_authors(self):
+        from models.author import Author
+        conn = get_db_connection
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT a.id, a.name, COUNT(*) as article_count
+            FROM authors a
+            JOIN articles art ON a.id = art.author_id
+            WHERE art.magazine_id = ?
+            GROUP BY a.id
+            HAVING article_count > 2
+        ''', (self._id,))
+        
+        authors = [
+            Author(
+                id=row['id'], 
+                name=row['name']
+            ) for row in cursor.fetchall()
+        ]
+        
+        conn.close()
+        return authors if authors else None
 
     def __repr__(self):
         return f'<Magazine {self.name}>'
