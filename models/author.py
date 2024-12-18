@@ -39,7 +39,30 @@ class Author:
     def name(self):
         return self._name
     
-    
+    def articles(self):
+        from models.article import Article
+        conn = get_db_connection
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT id, title, content, author_id, magazine_id
+            FROM articles
+            WHERE author_id = ?
+        ''', (self._id,))
+
+        articles = [
+            Article(
+                id=row['id'],
+                title=row['title'],
+                content=row['content'],
+                author_id=row['author_id'],
+                magazine_id=row['magazine_id']
+            ) for row in cursor.fetchall()
+        ]
+
+        conn.close()
+        return articles
+
 
 
     def __repr__(self):
