@@ -33,6 +33,36 @@ class Magazine:
         finally:
             conn.close()
 
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self,value):
+        if not isinstance(value, str):
+            raise ValueError("Name must be a string")
+        
+        if len(value) < 2 or len(value) > 16:
+            raise ValueError("Name must be between 2 and 16 characters, inclusive")
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('UPDATE magazines SET name = ? WHERE id = ?', (value, self._id))
+            conn.commit()
+            self._name = value
+        except Exception as e:
+            conn.rollback()
+            raise ValueError(f"Error updating magazine name: {e}")
+        finally:
+            conn.close()
+
+
         self.id = id
         self.name = name
         self.category = category
