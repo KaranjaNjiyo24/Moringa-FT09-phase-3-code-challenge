@@ -1,17 +1,15 @@
-from database.setup import create_tables, drop_tables
-from database.connection import get_db_connection
+from database.setup import create_tables
 from models.article import Article
 from models.author import Author
 from models.magazine import Magazine
 
 def main():
-    # Reset database (optional - comment out if you want to preserve data)
-    drop_tables()
+
     
     # Initialize the database and create tables
     create_tables()
 
-    # Demonstration of model creation and interactions
+    # Model creation and interactions demos
     try:
         # Create Authors
         john = Author(None, "John Doe")
