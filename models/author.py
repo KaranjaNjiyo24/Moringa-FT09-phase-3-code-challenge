@@ -3,7 +3,7 @@ class Author:
     def __init__(self, id, name):
         self.id = id
         self.name =name
-        
+
         if not isinstance(name, str):
             raise ValueError("Name must be a string")
         
@@ -30,6 +30,16 @@ class Author:
             raise ValueError(f"Error creating/retrieving author: {e}")
         finally:
             conn.close()
+    
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def name(self):
+        return self._name
+    
+    
 
 
     def __repr__(self):
