@@ -111,8 +111,29 @@ class Magazine:
         
         conn.close()
         return articles
-    def con
-
+    
+    def contributors(self):
+        
+        from models.author import Author
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT DISTINCT a.id, a.name 
+            FROM authors a
+            JOIN articles art ON a.id = art.author_id
+            WHERE art.magazine_id = ?
+        ''', (self._id,))
+        
+        contributors = [
+            Author(
+                id=row['id'], 
+                name=row['name']
+            ) for row in cursor.fetchall()
+        ]
+        
+        conn.close()
+        return contributors
 
     def __repr__(self):
         return f'<Magazine {self.name}>'
