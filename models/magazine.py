@@ -62,6 +62,38 @@ class Magazine:
         finally:
             conn.close()
 
+    @property
+    def category(self):
+        """
+        Getter and setter for magazine's category
+        
+        Returns:
+            str: The magazine's category
+        """
+        return self._category
+
+    @category.setter
+    def category(self, value):
+        if not isinstance(value, str):
+            raise ValueError("Category must be a string")
+        
+        if len(value.strip()) == 0:
+            raise ValueError("Category must be longer than 0 characters")
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('UPDATE magazines SET category = ? WHERE id = ?', (value, self._id))
+            conn.commit()
+            self._category = value
+        except Exception as e:
+            conn.rollback()
+            raise ValueError(f"Error updating magazine category: {e}")
+        finally:
+            conn.close()
+
+
 
         self.id = id
         self.name = name
