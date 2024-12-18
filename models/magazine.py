@@ -94,10 +94,36 @@ class Magazine:
             conn.close()
 
 
+    def articles(self):
+        """
+        Retrieve all articles in this magazine
+        
+        Returns:
+            list: A list of Article objects in the magazine
+        """
+        from models.article import Article
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT id, title, content, author_id, magazine_id 
+            FROM articles 
+            WHERE magazine_id = ?
+        ''', (self._id,))
+        
+        articles = [
+            Article(
+                id=row['id'], 
+                title=row['title'], 
+                content=row['content'], 
+                author_id=row['author_id'], 
+                magazine_id=row['magazine_id']
+            ) for row in cursor.fetchall()
+        ]
+        
+        conn.close()
+        return articles
 
-        self.id = id
-        self.name = name
-        self.category = category
 
     def __repr__(self):
         return f'<Magazine {self.name}>'
