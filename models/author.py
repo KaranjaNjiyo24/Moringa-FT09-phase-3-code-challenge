@@ -62,6 +62,30 @@ class Author:
 
         conn.close()
         return articles
+    
+    def magazines(self):
+        from models.magazine import Magazine
+        conn = get_db_connection
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT DISTINCT m.id, m.name, m.category
+            FROM magazines m
+            JOIN articles a ON m.id = a.magazine_id
+            WHERE a.author_id = ?
+        ''', (self._id,))
+
+        magazines = [
+            Magazine(
+                id=row['id'],
+                name=row['name'],
+                category=row['category']
+            ) for row in cursor.fetchall()
+        ]
+
+        conn.close()
+        return magazines
+
 
 
 
