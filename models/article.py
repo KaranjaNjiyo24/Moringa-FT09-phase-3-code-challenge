@@ -35,6 +35,46 @@ class Article:
         finally:
             conn.close()
     
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def title(self):
+        return self._title
+    
+    @property
+    def author(self):
+        from models.author import Author
+        conn = get_db_connection
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM authors WHERE id = ?', (self._author_id))
+        author_data = cursor.fetchone()
+        conn.close()
+
+        if author_data:
+            return Author(
+                name=author_data['name']
+            )
+        return None
+    
+    @property
+    def magazine(self):
+        from models.magazine import Magazine
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM magazines WHERE id = ?', (self._magazine_id,))
+        magazine_data = cursor.fetchone()
+        conn.close()
+
+        if magazine_data:
+            return Magazine(
+                name=magazine_data['name'],
+                category=magazine_data['category']
+            )
+        return None
 
     def __repr__(self):
         return f'<Article {self.title}>'
