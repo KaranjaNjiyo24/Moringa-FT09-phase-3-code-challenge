@@ -8,8 +8,8 @@ class Article:
         if len(title) < 5 or len(title) > 50:
             raise ValueError("Title must be between 5 and 50 characters, inclusive")
         
-        conn = get_db_connection
-        cursor = conn.cursor
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
         try:
             if id is None:

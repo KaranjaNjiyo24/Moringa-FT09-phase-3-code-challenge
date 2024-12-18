@@ -1,8 +1,6 @@
 from database.connection import get_db_connection
 class Author:
     def __init__(self, id, name):
-        self.id = id
-        self.name =name
 
         if not isinstance(name, str):
             raise ValueError("Name must be a string")
@@ -85,9 +83,6 @@ class Author:
 
         conn.close()
         return magazines
-
-
-
 
     def __repr__(self):
         return f'<Author {self.name}>'
