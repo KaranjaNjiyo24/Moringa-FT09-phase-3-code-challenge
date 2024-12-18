@@ -64,12 +64,6 @@ class Magazine:
 
     @property
     def category(self):
-        """
-        Getter and setter for magazine's category
-        
-        Returns:
-            str: The magazine's category
-        """
         return self._category
 
     @category.setter
@@ -95,12 +89,6 @@ class Magazine:
 
 
     def articles(self):
-        """
-        Retrieve all articles in this magazine
-        
-        Returns:
-            list: A list of Article objects in the magazine
-        """
         from models.article import Article
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -123,6 +111,7 @@ class Magazine:
         
         conn.close()
         return articles
+    def con
 
 
     def __repr__(self):
